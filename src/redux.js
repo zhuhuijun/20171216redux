@@ -5,7 +5,7 @@ let createStore = (reducer) => {
     let listeners = [];
     //
     let subscribe = (listener) => {
-        this.listeners.push(listener);
+        listeners.push(listener);
         return () => {
             listeners = listeners.filter(l => l !== listener)
         }
@@ -26,4 +26,12 @@ let createStore = (reducer) => {
         dispatch
     }
 };
-export  {createStore};
+let applyMiddleware = middleware => createStore => reducer => {
+    let store = createStore(reducer);
+    middleware = middleware(store);
+    let dispatch = middleware(store.dispatch);
+    return {
+        ...store, dispatch
+    }
+}
+export {createStore, applyMiddleware};

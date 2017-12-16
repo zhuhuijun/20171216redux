@@ -22,27 +22,12 @@ let logger = store => next => action => {
     console.log('before----------', store.getState());
     console.log(action);
     next(action);
-    console.log('after----------', store.getState());
+    console.log('after----------',store.getState());
 }
-
-let thunk = store => next => action => {
-    if (typeof action === 'function') {
-        return action(next);
-    } else {
-        return next(action);
-    }
-}
-let store = applyMiddleware(thunk)(createStore)(reducer);
+let store = applyMiddleware(logger)(createStore)(reducer);
 //let store = createStore(reducer);
 //console.info(store.getState());
-store.subscribe(function () {
-    console.log(store.getState())
-});
-store.dispatch(function (dispatch) {
-    setTimeout(function () {
-        dispatch({type: Types.ADD})
-    }, 3000);
-});
+store.dispatch({type: Types.ADD});
 console.info(store.getState());
 store.dispatch({type: Types.DEC});
 console.info(store.getState());
